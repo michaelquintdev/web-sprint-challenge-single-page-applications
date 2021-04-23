@@ -8,10 +8,10 @@ import Home from './components/Home.js';
 const initialFormValues = {
     name: '',
     size: '',
-    topping1: false,
-    topping2: false,
-    topping3: false,
-    topping4: false,
+    pineapple: false,
+    concrete: false,
+    drywall: false,
+    acid: false,
     special: '',
 }
 
@@ -27,9 +27,13 @@ const App = () => {
       name: formValues.name.trim(),
       size: formValues.size.trim(),
       special: formValues.special.trim(),
+      toppings: ['pineapple', 'drywall', 'concrete', 'acid'].filter((topping) => 
+        formValues[topping]
+      ),
     }
     setPizzas([...pizzas, newPizza]);
     setFormValues(initialFormValues);
+    console.log(pizzas);
   }
 
   return (

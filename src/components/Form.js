@@ -4,8 +4,9 @@ export default function Form(props){
     const {values, update, submit} = props;
 
     const onChange = evt => {
-        const { name, value } = evt.target;
-        update(name, value);
+        const { name, value, checked, type } = evt.target;
+        const valueToUse = type === 'checkbox' ? checked : value;
+        update(name, valueToUse);
     }
     const onSubmit = evt => {
         evt.preventDefault();
@@ -41,7 +42,7 @@ export default function Form(props){
                     <label>
                         Pineapple
                         <input
-                            checked = {null}
+                            checked = {values.pineapple}
                             onChange = {onChange}
                             name = 'pineapple'
                             type = 'checkbox'
@@ -51,7 +52,7 @@ export default function Form(props){
                         <br></br>   
                         Solid Concrete
                         <input 
-                            checked = {null}
+                            checked = {values.concrete}
                             onChange = {onChange}
                             name = 'concrete'
                             type = 'checkbox'
@@ -61,7 +62,7 @@ export default function Form(props){
                         <br></br>
                         Drywall
                         <input
-                            checked = {null}
+                            checked = {values.drywall}
                             onChange = {onChange}
                             name = 'drywall'
                             type = 'checkbox'
@@ -71,7 +72,7 @@ export default function Form(props){
                         <br></br>
                         Straight Hydrochloric Acid
                         <input
-                            checked = {null}
+                            checked = {values.acid}
                             onChange = {onChange}
                             name = 'acid'
                             type = 'checkbox'

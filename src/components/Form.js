@@ -1,23 +1,32 @@
 import React from 'react';
 
 export default function Form(props){
-    const {values, update, submit} = props;
+    const {values, update, submit, errors, disabled} = props;
+
+    const onSubmit = evt => {
+        evt.preventDefault();
+        submit();
+    }
 
     const onChange = evt => {
         const { name, value, checked, type } = evt.target;
         const valueToUse = type === 'checkbox' ? checked : value;
         update(name, valueToUse);
     }
-    const onSubmit = evt => {
-        evt.preventDefault();
-        submit();
-    }
 
     return (
         // Constructing the form
         <form id = 'pizza-form' onSubmit={onSubmit}>
+            <h2>Form to get Lambda Pizza!</h2>
+            {/* Error messages */}
+            <div className="errors">
+                <div>{errors.name}</div>
+                <div>{errors.size}</div>
+                <div>{errors.acid}</div>
+                <div>{errors.special}</div>
+            </div>
+        {/* Form container */}
             <div className = 'form-container'>
-                <h2>Form to get Lambda Pizza!</h2>
                 <label>
                     Name
                     <input 
@@ -94,7 +103,7 @@ export default function Form(props){
                 </label>
                 </div>
             </div>
-            <button id = 'order-button'>Submit Order Here</button>
+            <button id = 'order-button' disabled = {disabled}>Submit Order Here</button>
         </form>
     );
 }

@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Route, Link, Switch} from 'react-router-dom';
 import Form from './components/Form.js';
 import Home from './components/Home.js';
-
+import schema from './validation/formSchema.js';
+import * as yup from "yup";
 
 // Setting initial form Values
 const initialFormValues = {
@@ -14,12 +15,39 @@ const initialFormValues = {
     acid: false,
     special: '',
 }
+const initialFormErrors = {
+  name: '',
+  size: '',
+  special: '',
+};
+const initialDisabled = true;
+const initialPizzas = [];
+
 
 const App = () => {
-  const [pizzas, setPizzas] = useState([])
+  const [pizzas, setPizzas] = useState(initialPizzas)
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [disabled, setDisabled] = useState(initialDisabled);
+
+
 
   const updateForm = (inputName, inputValue) => {
+    yup
+      .reach(schema, inputName)
+      .validate(inputValue)
+      .then(() => {
+        setFormErrors({
+          ...formErrors,
+          [inputName]: '',
+        });
+      })
+      .catch((err) => {
+        setFormErrors({
+          ...formErrors,
+          [inputName]: err.errors[0],
+        })
+      });
     setFormValues({...formValues, [inputName]: inputValue})
   }
   const submitForm = () => {
@@ -31,10 +59,16 @@ const App = () => {
         formValues[topping]
       ),
     }
+    console.log(pizzas);
     setPizzas([...pizzas, newPizza]);
     setFormValues(initialFormValues);
-    console.log(pizzas);
   }
+
+  useEffect(() => {
+    schema.isValid(formValues).then((valid) => {
+      setDisabled(!valid);
+    });
+  }, [formValues]); 
 
   return (
     <div className = 'homepage'>
@@ -46,7 +80,14 @@ const App = () => {
     {/* Switch that will send you to different components */}
     <Switch>
       <Route path = '/pizza'>
-        <Form id = 'pizza-form' values = {formValues} update = {updateForm} submit = {submitForm}/>
+        <Form 
+          id = 'pizza-form' 
+          values = {formValues} 
+          update = {updateForm} 
+          submit = {submitForm}
+          errors = {formErrors}
+          disabled = {disabled}
+        />
       </Route>
       <Route path = '/'>
         <Home />

@@ -4,6 +4,7 @@ import Form from './components/Form.js';
 import Home from './components/Home.js';
 import schema from './validation/formSchema.js';
 import * as yup from "yup";
+import axios from "axios";
 
 // Setting initial form Values
 const initialFormValues = {
@@ -30,7 +31,18 @@ const App = () => {
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [disabled, setDisabled] = useState(initialDisabled);
 
-
+  const postNewPizza = (newPizza) => {
+    console.log(newPizza);
+    axios
+      .post("https://reqres.in/api/orders", newPizza)
+      .then((res) => {
+        setPizzas([res.data, ...pizzas]);
+        setFormValues(initialFormValues);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const updateForm = (inputName, inputValue) => {
     yup
@@ -50,6 +62,7 @@ const App = () => {
       });
     setFormValues({...formValues, [inputName]: inputValue})
   }
+
   const submitForm = () => {
     const newPizza = {
       name: formValues.name.trim(),
@@ -59,9 +72,7 @@ const App = () => {
         formValues[topping]
       ),
     }
-    console.log(pizzas);
-    setPizzas([...pizzas, newPizza]);
-    setFormValues(initialFormValues);
+    postNewPizza(newPizza);
   }
 
   useEffect(() => {

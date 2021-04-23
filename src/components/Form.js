@@ -39,7 +39,7 @@ export default function Form(props){
                 </label>
                 <label>
                     Size of Pizza:
-                    <select name = 'size' value = {values.size} onChange = {onChange}>
+                    <select name = 'size' value = {values.size} onChange = {onChange} id ='size-dropdown'>
                         <option value = ''>Select a size</option>
                         <option value = 'Small'>Small</option>
                         <option value = 'Medium'>Medium</option>
